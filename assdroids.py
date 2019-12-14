@@ -73,6 +73,5 @@ def main():
             if not d[a]:
                 del d[a]
 
-
 if __name__ == "__main__":
     main()
