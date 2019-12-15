@@ -38,6 +38,7 @@ class Coord():
             self.distance = distance
             self.visited = True
 
+        self.type = type
         if type == 0:
             return
         if type == 2:
@@ -68,7 +69,7 @@ class mydefaultdict(defaultdict):
         self[key] = new = self.default_factory(key)
         return new
 
-def part1():
+def main():
     filename = 'day15_input.txt'
     with open(filename, 'r') as f:
         text = f.read()
@@ -87,9 +88,27 @@ def part1():
         if not next_room.visited:
             next_room.explore(rev_dir(direction), 1, ctrl.move(direction), game_map, ctrl)
 
-
-def main():
-    part1()
-
+    with_oxigen = set()
+    without_oxigen = set()
+    for coord in game_map:
+        if game_map[coord].type == 0:
+            continue
+        if game_map[coord].type == 1:
+            without_oxigen.add(coord)
+        else:
+            with_oxigen.add(coord)
+    steps = 0
+    while without_oxigen:
+        steps += 1
+        filled = set()
+        for coord in with_oxigen:
+            for direction in range(1,5):
+                next_pos = new_pos(coord, direction)
+                if next_pos in without_oxigen:
+                    filled.add(next_pos)
+        for coord in filled:
+            without_oxigen.discard(coord)
+        with_oxigen = filled
+    print('Took %i minutes' % steps)
 if __name__ == "__main__":
     main()
