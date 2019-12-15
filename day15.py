@@ -1,15 +1,5 @@
-from intcomputer import intcomputer
+from intcomputer import intcomputer, input_ctrl
 from collections import defaultdict
-
-class input_ctrl():
-    def __init__(self):
-        self.state = 1
-
-    def set_state(self, state):
-        self.state = state
-
-    def pop(self, _):
-        return self.state
 
 addjustment = {1: (-1, 0), 2: (1, 0), 3: (0, 1), 4: (0, -1)}
 
@@ -56,7 +46,7 @@ class Coord():
 
 class Ctrl():
     def __init__(self, program):
-        self.comp_input = input_ctrl()
+        self.comp_input = input_ctrl(1)
         self.computer = intcomputer(program, self.comp_input)
 
     def move(self, direction):
@@ -77,7 +67,6 @@ def main():
     program = [int(numeric_string) for numeric_string in text.split(",")]
 
     ctrl = Ctrl(program)
-    code = False
     pos = (0, 0)
     direction = 1
     game_map = mydefaultdict(Coord)

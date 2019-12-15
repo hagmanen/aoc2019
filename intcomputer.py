@@ -1,5 +1,15 @@
 from collections import defaultdict
 
+class input_ctrl():
+    def __init__(self, state):
+        self.state = state
+
+    def set_state(self, state):
+        self.state = state
+
+    def pop(self, _):
+        return self.state
+
 class intcomputer():
     def __init__(self, program, input):
         self.program = defaultdict(int)
