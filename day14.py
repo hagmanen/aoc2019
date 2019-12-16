@@ -1,9 +1,5 @@
 import re
 
-'''
-15 KTJDG, 12 BHXH => 5 XCVML
-'''
-
 def parse_ingrediense(text):
     (d, s) = text.split(' ')
     return (int(d), s)
