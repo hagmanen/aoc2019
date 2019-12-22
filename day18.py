@@ -51,7 +51,7 @@ def find_keys(m_graph, m_map, m_pos, visited, keys_found, steps, max_steps): # =
 
 def find_shorted_path(m_graph, m_map, m_pos, keys_left, keys_found, travelled, shortest_found):
     if not keys_left:
-        print('%s after %i steps' % (keys_found, travelled))
+        print('%s after %i steps' % (keys_found, travelled), flush = True)
         return travelled
     new_keys = {}
     for neighbour in m_graph[m_pos]:
