@@ -1,5 +1,17 @@
 from collections import defaultdict
 
+class input_queue():
+    def __init__(self):
+        self.queue = []
+
+    def put(self, x):
+        self.queue.append(x)
+
+    def pop(self, v):
+        if not self.queue:
+            return -1
+        return self.queue.pop(v)
+
 class input_ctrl():
     def __init__(self, state):
         self.state = state
@@ -62,8 +74,11 @@ class intcomputer():
         self.pointer = self.pointer + 4
 
     def do_read(self):
-        self.write_memory(self.get_address(1), self.input.pop(0))
+        inp =self.input.pop(0)
+        self.write_memory(self.get_address(1), inp)
         self.pointer = self.pointer + 2
+        if inp == -1:
+            self.exit = 2
 
     def do_write(self):
         self.output = self.get_value(1)
@@ -104,4 +119,4 @@ class intcomputer():
         while not self.exit:
             #print('Opcode %i @ %i' % (self.program[self.pointer], self.pointer))
             self.calc[self.program[self.pointer] % 100]()
-        return (self.exit == 99, self.output)
+        return (self.exit, self.output)
