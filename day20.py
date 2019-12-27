@@ -1,5 +1,43 @@
 import copy
 
+example = '''             Z L X W       C                 
+             Z P Q B       K                 
+  ###########.#.#.#.#######.###############  
+  #...#.......#.#.......#.#.......#.#.#...#  
+  ###.#.#.#.#.#.#.#.###.#.#.#######.#.#.###  
+  #.#...#.#.#...#.#.#...#...#...#.#.......#  
+  #.###.#######.###.###.#.###.###.#.#######  
+  #...#.......#.#...#...#.............#...#  
+  #.#########.#######.#.#######.#######.###  
+  #...#.#    F       R I       Z    #.#.#.#  
+  #.###.#    D       E C       H    #.#.#.#  
+  #.#...#                           #...#.#  
+  #.###.#                           #.###.#  
+  #.#....OA                       WB..#.#..ZH
+  #.###.#                           #.#.#.#  
+CJ......#                           #.....#  
+  #######                           #######  
+  #.#....CK                         #......IC
+  #.###.#                           #.###.#  
+  #.....#                           #...#.#  
+  ###.###                           #.#.#.#  
+XF....#.#                         RF..#.#.#  
+  #####.#                           #######  
+  #......CJ                       NM..#...#  
+  ###.#.#                           #.###.#  
+RE....#.#                           #......RF
+  ###.###        X   X       L      #.#.#.#  
+  #.....#        F   Q       P      #.#.#.#  
+  ###.###########.###.#######.#########.###  
+  #.....#...#.....#.......#...#.....#.#...#  
+  #####.#.###.#######.#######.###.###.#.#.#  
+  #.......#.......#.#.#.#.#...#...#...#.#.#  
+  #####.###.#####.#.#.#.#.###.###.#.###.###  
+  #.......#.....#.#...#...............#...#  
+  #############.#.#.###.###################  
+               A O F   N                     
+               A A D   M                     '''
+
 def get_label(m_map, p):
     ds = [(1,0), (0,1), (-1,0), (0,-1)]
     for d in range(0, len(ds)):
@@ -58,17 +96,21 @@ def parse_maze(m_pos, m_map, m_dirs, m_graph):
             else:
                 m_graph[m_pos][n[0]] = n[1]
 
-def find_shortest(m_graph, m_pos, m_target, m_walked, shortest_found, m_visisted):
+def find_shortest(m_graph, m_pos, m_target, m_walked, shortest_found, m_visisted, m_level_change, story):
+    if m_pos == m_target:
+        print('%s %i' % (story, m_walked))
+        return m_walked
+    if m_pos[1] < 0 or m_pos[1] > 10:
+        return shortest_found
     if m_pos in m_visisted:
         return shortest_found
     if shortest_found and shortest_found < m_walked:
         return shortest_found
-    if m_pos == m_target:
-        return m_walked
-    if not m_pos in m_graph:
+    if not m_pos[0] in m_graph:
         return shortest_found
-    for m_next in m_graph[m_pos].items():
-        sf = find_shortest(m_graph, m_next[0], m_target, m_walked + m_next[1], shortest_found, m_visisted.union({m_pos}))
+    for m_next in m_graph[m_pos[0]].items():
+        level = m_pos[1] + m_level_change[m_next[0]]
+        sf = find_shortest(m_graph, (m_next[0], level), m_target, m_walked + m_next[1], shortest_found, m_visisted.union({m_pos}), m_level_change, story + str((m_next[0], level)))
         if not shortest_found or shortest_found > sf:
             shortest_found = sf
     return shortest_found
@@ -78,6 +120,7 @@ def main():
     with open(m_filename, 'r') as f:
         m_text = f.read()
 
+    #m_text = example
     m_map = {}
     y = 0
     for line in m_text.splitlines():
@@ -87,6 +130,9 @@ def main():
                 m_map[(x, y)] = c
             x += 1
         y += 1
+
+    x_edge = [2, x - 2]
+    y_edge = [2, y - 2]
 
     labels = find_labels(m_map)
 
@@ -113,12 +159,29 @@ def main():
                 del m_graph[neigbour][dead_end]
             del m_graph[dead_end]
 
+    m_level_change = {}
+    teleporters = set()
+    for coords in labels.values():
+        teleporters.update(coords)
+    for node in m_graph.keys():
+        if node in teleporters:
+            if node[0] in x_edge or node[0] in y_edge:
+                m_level_change[node] = 0
+            else:
+                m_level_change[node] = 0
+        else:
+            m_level_change[node] = 0
+    m_level_change[labels['AA'][0]] = -1
+    m_level_change[labels['ZZ'][0]] = -1
+
     to_remove = []
     for (k, v) in m_graph.items():
         if len(v) == 2:
             items = [x for x in v.items()]
             p1 = items[0][0]
             p2 = items[1][0]
+            if (p1 in teleporters) or (p2 in teleporters):
+                continue
             l = items[0][1] + items[1][1]
             del m_graph[p1][k]
             m_graph[p1][p2] = l
@@ -129,10 +192,7 @@ def main():
     for p in to_remove:
         del m_graph[p]
 
-    for x in m_graph.items():
-        print(x)
-
-    print(find_shortest(m_graph, labels['AA'][0], labels['ZZ'][0], 0, None, set()))
+    print(find_shortest(m_graph, (labels['AA'][0], 0), (labels['ZZ'][0], -1), 0, None, set(), m_level_change, ''))
 
 if __name__ == "__main__":
     main()
