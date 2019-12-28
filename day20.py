@@ -100,17 +100,21 @@ def find_shortest(m_graph, m_pos, m_target, m_walked, shortest_found, m_visisted
     if m_pos == m_target:
         print('%s %i' % (story, m_walked))
         return m_walked
-    if m_pos[1] < 0 or m_pos[1] > 10:
+    if m_pos[1] < 0:
         return shortest_found
-    if m_pos in m_visisted:
+    if (m_pos in m_visisted) and (m_visisted[m_pos] < m_walked):
         return shortest_found
     if shortest_found and shortest_found < m_walked:
         return shortest_found
     if not m_pos[0] in m_graph:
         return shortest_found
-    for m_next in m_graph[m_pos[0]].items():
-        level = m_pos[1] + m_level_change[m_next[0]]
-        sf = find_shortest(m_graph, (m_next[0], level), m_target, m_walked + m_next[1], shortest_found, m_visisted.union({m_pos}), m_level_change, story + str((m_next[0], level)))
+    m_visisted[m_pos] = m_walked
+    sorter = lambda x, m_level_change=m_level_change: m_level_change[x[0]]
+    for m_next in sorted(m_graph[m_pos[0]].items(), key = sorter):
+        level = m_pos[1]
+        if m_level_change[m_next[0]] + m_level_change[m_pos[0]] == 0:
+            level += m_level_change[m_pos[0]]
+        sf = find_shortest(m_graph, (m_next[0], level), m_target, m_walked + m_next[1], shortest_found, m_visisted, m_level_change, story + str((m_next[0], level)))
         if not shortest_found or shortest_found > sf:
             shortest_found = sf
     return shortest_found
@@ -131,8 +135,8 @@ def main():
             x += 1
         y += 1
 
-    x_edge = [2, x - 2]
-    y_edge = [2, y - 2]
+    x_edge = [2, x - 3]
+    y_edge = [2, y - 3]
 
     labels = find_labels(m_map)
 
@@ -171,8 +175,8 @@ def main():
                 m_level_change[node] = 0
         else:
             m_level_change[node] = 0
-    m_level_change[labels['AA'][0]] = -1
-    m_level_change[labels['ZZ'][0]] = -1
+    m_level_change[labels['AA'][0]] = 0
+    m_level_change[labels['ZZ'][0]] = 0
 
     to_remove = []
     for (k, v) in m_graph.items():
@@ -192,7 +196,23 @@ def main():
     for p in to_remove:
         del m_graph[p]
 
-    print(find_shortest(m_graph, (labels['AA'][0], 0), (labels['ZZ'][0], -1), 0, None, set(), m_level_change, ''))
+    #print('Day20 part 1')
+    #print(find_shortest(m_graph, (labels['AA'][0], 0), (labels['ZZ'][0], 0), 0, None, {}, m_level_change, ''))
+
+    for node in m_graph.keys():
+        if node in teleporters:
+            if (node[0] in x_edge) or (node[1] in y_edge):
+                m_level_change[node] = -1
+            else:
+                m_level_change[node] = 1
+    m_level_change[labels['AA'][0]] = 0
+    m_level_change[labels['ZZ'][0]] = 0
+
+    print('Day20 part 2')
+    #print('Start %s %s' % (labels['AA'][0], m_graph[labels['AA'][0]]))
+    #for x in m_graph.items():
+    #    print(x)
+    print(find_shortest(m_graph, (labels['AA'][0], 0), (labels['ZZ'][0], 0), 0, 10000, {}, m_level_change, ''))
 
 if __name__ == "__main__":
     main()
