@@ -30,11 +30,10 @@ def parse_maze(m_pos, m_map, m_dirs, m_graph):
             else:
                 m_graph[m_pos][n[0]] = n[1]
 
-
 def get_map_and_nodes(m_text):
     m_map = {}
     m_keys = {}
-    m_entrances = set()
+    m_entrance = None
     y = 0
     for line in m_text.splitlines():
         x = 0
@@ -44,10 +43,10 @@ def get_map_and_nodes(m_text):
                 if c.islower():
                     m_keys[c] = (x, y)
                 if c == '@':
-                    m_entrances.add((x, y))
+                    m_entrance = (x, y)
             x += 1
         y += 1
-    return (m_map, m_keys, m_entrances)
+    return (m_map, m_keys, m_entrance)
 
 def get_graph(m_map, m_entrances):
     m_dirs = [(1,0), (0,1), (-1,0), (0,-1)]
@@ -117,28 +116,28 @@ def is_locked(m_keys, m_doors):
             return True
     return False
 
-def get_shortest_key_path(m_pos, m_graph, m_walked, m_keys, m_visited, all_keys):
+def get_shortest_key_path(m_pos_list, m_pos_index, m_graph, m_walked, m_keys, m_visited, all_keys):
     if m_keys == all_keys:
         if all_keys in m_visited and m_visited[all_keys] <= m_walked:
             return
         print('Found shortest: %i' % m_walked)
         m_visited[all_keys] = m_walked
         return
-    if (m_pos, m_keys) in m_visited and m_visited[(m_pos, m_keys)] <= m_walked:
+    current_status = (tuple(m_pos_list), m_keys)
+    if current_status in m_visited and m_visited[current_status] <= m_walked:
         return
-    m_visited[(m_pos, m_keys)] = m_walked
-    for (m_key, (m_dist, m_doors)) in m_graph[m_pos].items():
-        if m_key in m_keys or is_locked(m_keys, m_doors):
-            continue
-        get_shortest_key_path(m_key, m_graph, m_walked + m_dist, ''.join(sorted(m_keys + m_key)), m_visited, all_keys)
+    m_visited[current_status] = m_walked
+    for m_pos_index in range(len(m_pos_list)):
+        m_pos = m_pos_list[m_pos_index]
+        for (m_key, (m_dist, m_doors)) in m_graph[m_pos].items():
+            if m_key in m_keys or is_locked(m_keys, m_doors):
+                continue
+            old_pos = m_pos_list[m_pos_index]
+            m_pos_list[m_pos_index] = m_key
+            get_shortest_key_path(m_pos_list, m_pos_index, m_graph, m_walked + m_dist, ''.join(sorted(m_keys + m_key)), m_visited, all_keys)
+            m_pos_list[m_pos_index] = old_pos
 
-def main():
-    m_filename = 'day18_input.txt'
-    with open(m_filename, 'r') as f:
-        m_text = f.read()
-
-    (m_map, m_keys, m_entrances) = get_map_and_nodes(m_text)
-
+def solve_maze(m_map, m_keys, m_entrances):
     m_graph = get_graph(m_map, m_entrances)
 
     print('Nodes before prune: %i' % len(m_graph))
@@ -150,8 +149,34 @@ def main():
 
     m_visited = {}
     all_keys = ''.join(sorted(m_keys.keys()))
-    get_shortest_key_path(m_entrances.pop(), m_graph, 0, '', m_visited, all_keys)
+    get_shortest_key_path(m_entrances, 0, m_graph, 0, '', m_visited, all_keys)
     print(m_visited[all_keys])
-    
+
+def mod_map(m_map, m_entrance):
+    (x, y) = m_entrance
+    m_entrances = [(x + 1, y + 1), (x + 1, y - 1), (x - 1, y - 1), (x - 1, y + 1)]
+    m_map[(x + 1, y)] = '#'
+    m_map[(x, y + 1)] = '#'
+    m_map[(x - 1, y)] = '#'
+    m_map[(x, y - 1)] = '#'
+    m_map[(x, y)] = '#'
+    for p in m_entrances:
+        m_map[p] = '@'
+    return m_entrances
+
+def main():
+    m_filename = 'day18_input.txt'
+    with open(m_filename, 'r') as f:
+        m_text = f.read()
+
+    (m_map, m_keys, m_entrance) = get_map_and_nodes(m_text)
+
+    print('Day 18 part 1')
+    solve_maze(m_map, m_keys, [m_entrance])
+
+    print('Day 18 part 2')
+    m_entrances = mod_map(m_map, m_entrance)
+    solve_maze(m_map, m_keys, m_entrances)
+
 if __name__ == "__main__":
     main()
