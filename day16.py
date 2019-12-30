@@ -19,10 +19,10 @@ def doit(imp, v):
 def part1(text):
     imp = [int(i) for i in text]
     v = [0, 1, 0, -1]
-    print(imp[0:8])
+    #print(imp[0:8])
     for i in range(0,100):
         imp = doit(imp, v)
-        print(imp[0:8])
+    print(''.join([str(x) for x in imp[0:8]]))
 
 
 def doitmore(work):
@@ -39,7 +39,7 @@ def main():
     with open(filename, 'r') as f:
         text = f.read().strip()
     #text = '03036732577212944063491565474664' #84462026
-    #part1(text)
+    part1(text)
 
     skip = int(text[0:7])
     #print(skip)
