@@ -2,7 +2,6 @@ import math
 import itertools
 from collections import defaultdict
 
-
 class assdroid:
     def __init__(self, x, y):
         self.x = x
@@ -73,5 +72,7 @@ def main():
             if not d[a]:
                 del d[a]
 
+#303
+#408
 if __name__ == "__main__":
     main()
