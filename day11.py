@@ -15,42 +15,49 @@ def marking(val):
         return '#'
     return ' '
 
-def main():
-    filename = 'day11_input.txt'
-    with open(filename, 'r') as f:
-        text = f.read()
-    #text = ''
-    comp_input =[1]
-    program = [int(numeric_string) for numeric_string in text.split(",")]
+def calc_output(program, comp_input):
     computer = intcomputer(program, comp_input)
-    code = False
     pos = (0, 0)
     direction = 0
     plates = {}
     min_pos = (0, 0)
     max_pos = (0, 0)
     steps = [(-1, 0), (0, 1), (1, 0), (0, -1)]
-    while not code:
+    while True:
         (code, res) = computer.run()
-        if code:
+        if code == 99:
             break
         plates[pos] = res
         (code, res) = computer.run()
-        if code:
+        if code == 99:
             break
         direction = turn(direction, res)
         pos = tuple(map(operator.add, pos, steps[direction]))
         min_pos = tuple(map(min, pos, min_pos))
-        max_pos = tuple(map(max, pos, min_pos))
+        max_pos = tuple(map(max, pos, max_pos))
         comp_input.append(plates[pos] if pos in plates else 0)
+    return (plates, min_pos, max_pos)
+
+
+def main():
+    filename = 'day11_input.txt'
+    with open(filename, 'r') as f:
+        text = f.read()
+
+    program = [int(numeric_string) for numeric_string in text.split(",")]
+
+    (plates, min_pos, max_pos) = calc_output(program, [0])
     print(len(plates))
-    for y in range(min_pos[0], max_pos[0] + 2):
+    (plates, min_pos, max_pos) = calc_output(program, [1])
+    for y in range(min_pos[0], max_pos[0] + 1):
         line = ''
-        for x in range(min_pos[1], max_pos[1] + 2):
+        for x in range(min_pos[1], max_pos[1] + 1):
             pos = (y, x)
             line = line + marking(plates[pos] if pos in plates else 0)
         print(line)
 
+#2478
+#HCZRUGAZ
 if __name__ == "__main__":
     main()
 
