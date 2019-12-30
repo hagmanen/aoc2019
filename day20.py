@@ -214,5 +214,7 @@ def main():
     #    print(x)
     print(find_shortest(m_graph, (labels['AA'][0], 0), (labels['ZZ'][0], 0), 0, 10000, {}, m_level_change, ''))
 
+#578
+#6592
 if __name__ == "__main__":
     main()

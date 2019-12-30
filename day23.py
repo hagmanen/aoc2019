@@ -14,6 +14,7 @@ def main():
     nat = [0, 0]
     last_nat = [0, 0]
     idle_count = 0
+    first_nat = None
 
     for addr in range(0, 50):
         inputs.append(input_queue())
@@ -39,6 +40,8 @@ def main():
                 if len(mes) == 3:
                     #print('Send (%i,%i) to %i' % (mes[1], mes[2], mes[0]))
                     if mes[0] == 255:
+                        if not first_nat:
+                            first_nat = mes[1:]
                         nat = mes[1:]
                     else:
                         inputs[mes[0]].put(mes[1])
@@ -46,6 +49,9 @@ def main():
                     mes = []
             if idle_count == 50:
                 if last_nat == nat:
+                    print('Part 1')
+                    print(first_nat)
+                    print('Part 2')
                     print(nat)
                     return 
                 last_nat = [x for x in nat]

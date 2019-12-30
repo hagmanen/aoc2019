@@ -14,14 +14,12 @@ def main():
 
     program = [int(numeric_string) for numeric_string in text.split(",")]
 
-    '''
     m_count = 0
     for y in range(0, 50):
         for x in range(0, 50):
             if in_beam(program, x, y):
                 m_count += 1
     print(m_count)
-    '''
 
     y = 100
     x = 0
@@ -33,5 +31,7 @@ def main():
             print(10000*x + y - 99)
             return
 
+#226
+#7900946
 if __name__ == "__main__":
     main()

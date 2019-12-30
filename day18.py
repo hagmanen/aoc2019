@@ -139,7 +139,7 @@ def get_shortest_key_path(m_pos_list, m_graph, m_walked, m_keys, m_visited, all_
     if give_up(m_pos_list, m_walked, m_keys, m_visited, all_keys):
         return
     if m_keys == all_keys:
-        print('Found shortest: %i, %s' % (m_walked, m_path), flush = True)
+        #print('Found shortest: %i, %s' % (m_walked, m_path), flush = True)
         m_visited[all_keys] = m_walked
         return
     for m_pos_index in range(len(m_pos_list)):

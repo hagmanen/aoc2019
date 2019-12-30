@@ -40,5 +40,6 @@ def main():
                 line = sys.stdin.readline()
             input_ctrl.extend([ord(numeric_string) for numeric_string in line])
 
+#196872
 if __name__ == "__main__":
     main()
