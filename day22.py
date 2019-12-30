@@ -13,6 +13,7 @@ def part1(op):
     print(pos)
 
 def part2():
+    # I didn't do this, I didn't manage the math and got the  impl from the internets
     m = 119315717514047
     n = 101741582076661
     pos = 2020
