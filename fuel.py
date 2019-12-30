@@ -4,58 +4,6 @@ import itertools
 from intcomputer import intcomputer
 from amplifier import amplifier
 
-def next_password(password):
-    password = password + 1
-    prev = int(password % 10)
-    found_recuring = False
-    for i in range(1, 6):
-        current = int((password % (10 ** (i + 1))) / (10 ** i))
-        if prev <= current:
-            found_recuring = True
-        if prev < current:
-            keep = int(password / (10 ** (i + 1)))
-            password = int(str(keep) + str(current)*(i + 1))
-        prev = current
-    if (found_recuring):
-        return password
-    return next_password(password)
-
-def has_pair(password):
-    prev = int(password % 10)
-    found_recuring = 0
-    for i in range(1, 6):
-        current = int((password % (10 ** (i + 1))) / (10 ** i))
-        if prev == current:
-            found_recuring = found_recuring + 1
-        elif found_recuring == 1:
-            return True
-        else:
-            found_recuring = 0
-            prev = current
-    return found_recuring == 1
-
-def day4():
-    start = 178416
-    stop = 676461
-    count = 0
-    while(start < stop):
-        start = next_password(start)
-        if(has_pair(start)):
-    #        print(start)
-            count = count + 1
-    print(count)
-    '''print(has_pair(112233))
-    print(has_pair(122233))
-    print(has_pair(122335))
-    print(has_pair(122344))
-    print(has_pair(123456))
-    print(has_pair(113456))
-    print(has_pair(122456))
-    print(has_pair(123356))
-    print(has_pair(123446))
-    print(has_pair(123455))'''
-
-
 def day5():
     filename = 'day5_input.txt'
     with open(filename, 'r') as f:
