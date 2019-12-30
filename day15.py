@@ -99,5 +99,8 @@ def main():
             without_oxigen.discard(coord)
         with_oxigen = filled
     print('Took %i minutes' % steps)
+
+#222
+#394
 if __name__ == "__main__":
     main()

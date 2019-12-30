@@ -29,7 +29,7 @@ def main():
     while True:
         #print('%i:%i' % (x, y))
         (m_exit, m_res) = m_computer.run()
-        if m_exit:
+        if m_exit == 99:
             break
         if m_res == 10:
             y += 1
@@ -69,10 +69,11 @@ def main():
 
     m_program[0] = 2
     m_computer = intcomputer(m_program, m_input)
-    m_exit = False
     m_sum = 0
-    while not m_exit:
+    while True:
         (m_exit, m_res) = m_computer.run()
+        if m_exit == 99:
+            break
         if m_res == 10:
             print()
         elif not str(chr(m_res)).isprintable():
@@ -82,5 +83,7 @@ def main():
         m_sum += m_res
     print(m_sum)
 
+#5724
+#732985
 if __name__ == "__main__":
     main()

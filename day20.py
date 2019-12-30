@@ -98,7 +98,7 @@ def parse_maze(m_pos, m_map, m_dirs, m_graph):
 
 def find_shortest(m_graph, m_pos, m_target, m_walked, shortest_found, m_visisted, m_level_change, story):
     if m_pos == m_target:
-        print('%s %i' % (story, m_walked))
+        #print('%s %i' % (story, m_walked))
         return m_walked
     if m_pos[1] < 0:
         return shortest_found
@@ -196,8 +196,8 @@ def main():
     for p in to_remove:
         del m_graph[p]
 
-    #print('Day20 part 1')
-    #print(find_shortest(m_graph, (labels['AA'][0], 0), (labels['ZZ'][0], 0), 0, None, {}, m_level_change, ''))
+    print('Day20 part 1')
+    print(find_shortest(m_graph, (labels['AA'][0], 0), (labels['ZZ'][0], 0), 0, None, {}, m_level_change, ''))
 
     for node in m_graph.keys():
         if node in teleporters:

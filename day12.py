@@ -99,5 +99,8 @@ def main():
 
     part2(moonsx, moonsy, moonsz)
 
+#6227
+#331346071640472
+
 if __name__ == "__main__":
     main()

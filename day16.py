@@ -42,7 +42,7 @@ def main():
     #part1(text)
 
     skip = int(text[0:7])
-    print(skip)
+    #print(skip)
     shitload = text * 10000
     work = [int(i) for i in reversed(shitload[skip:])]
     for _ in range(0,100):
@@ -50,6 +50,9 @@ def main():
     for x in reversed(work[-8:]):
         print(x, end = '')
     print()
+
+#89576828
+#23752579
 
 if __name__ == "__main__":
     main()

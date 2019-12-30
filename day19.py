@@ -4,7 +4,7 @@ def in_beam(program, x, y):
     comp_input = [x, y]
     computer = intcomputer(program, comp_input)
     (_, m_pull) = computer.run()
-    print('x%iy%i = %s' % (x, y, m_pull == 1))
+    #print('x%iy%i = %s' % (x, y, m_pull == 1))
     return m_pull == 1
 
 def main():

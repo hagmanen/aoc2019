@@ -34,10 +34,10 @@ def main():
                     continue
                 tried_once = False
                 idle_count = 0
-                print('Got %i from %i' % (x, addr))
+                #print('Got %i from %i' % (x, addr))
                 mes.append(x)
                 if len(mes) == 3:
-                    print('Send (%i,%i) to %i' % (mes[1], mes[2], mes[0]))
+                    #print('Send (%i,%i) to %i' % (mes[1], mes[2], mes[0]))
                     if mes[0] == 255:
                         nat = mes[1:]
                     else:
@@ -52,6 +52,7 @@ def main():
                 inputs[0].put(nat[0])
                 inputs[0].put(nat[1])
 
-
+#14834
+#10215
 if __name__ == "__main__":
     main()
