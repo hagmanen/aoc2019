@@ -4,22 +4,6 @@ import itertools
 from intcomputer import intcomputer
 from amplifier import amplifier
 
-def fuel(mass):
-    res = max(int(mass/3) - 2, 0)
-
-    if res == 0:
-        return 0
-    
-    return res + fuel(res)
-
-def day1():
-    filename = 'day1_input.txt'
-    total_fuel = 0
-    with open(filename, 'r') as f:
-        for line in f:
-            total_fuel += fuel(int(line))
-    print(total_fuel)
-    print(fuel(100756))
 
 calc = {1: (lambda p, v: do_add(p, v)),
         2: (lambda p, v: do_mult(p, v)),
